@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Blog - Lista Veezie</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@300;400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            font-family: 'Roboto', sans-serif;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Particelle fluttuanti cinematografiche */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 6s infinite ease-in-out;
+        }
+        
+        .particle:nth-child(2n) {
+            background: #ff6b6b;
+            animation-duration: 8s;
+            animation-delay: -2s;
+        }
+        
+        .particle:nth-child(3n) {
+            background: #4ecdc4;
+            animation-duration: 10s;
+            animation-delay: -4s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(0vh) rotate(180deg);
+                opacity: 1;
+            }
+        }
+        
+        /* Effetto film strip */
+        .film-strip {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 30px;
+            height: 100vh;
+            background: linear-gradient(to bottom, 
+                transparent 0%, 
+                #333 10%, 
+                transparent 20%, 
+                #333 30%, 
+                transparent 40%,
+                #333 50%,
+                transparent 60%,
+                #333 70%,
+                transparent 80%,
+                #333 90%,
+                transparent 100%
+            );
+            z-index: 2;
+            animation: filmRoll 3s infinite linear;
+        }
+        
+        .film-strip-right {
+            right: 0;
+            left: auto;
+            animation-direction: reverse;
+        }
+        
+        @keyframes filmRoll {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 0 100px;
+            }
+        }
+        
+        /* Container principale */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Header cinematografico */
+        .cinema-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .cinema-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            background: linear-gradient(45deg, #ffd700, #ff6b6b, #4ecdc4);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite, neonGlow 2s ease-in-out infinite alternate;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes neonGlow {
+            from { text-shadow: 0 0 30px rgba(255, 215, 0, 0.3); }
+            to { text-shadow: 0 0 50px rgba(255, 215, 0, 0.6), 0 0 70px rgba(255, 215, 0, 0.4); }
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-top: 1rem;
+            font-weight: 300;
+        }
+        
+        /* Card principale */
+        .link-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: slideIn 1s ease-out 0.5s both;
+        }
+        
+        .link-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b, #4ecdc4, #ffd700);
+            border-radius: 22px;
+            z-index: -1;
+            animation: borderRotate 3s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .link-card:hover::before {
+            opacity: 1;
+        }
+        
+        .link-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        @keyframes borderRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .instruction-text {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        
+        /* Box del link cliccabile */
+        .link-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid #ffd700;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .link-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .link-box:hover::before {
+            left: 100%;
+        }
+        
+        .link-box:hover {
+            border-color: #ff6b6b;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        .link-text {
+            font-family: 'Courier New', monospace;
+            color: #4ecdc4;
+            word-break: break-all;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Pulsante copia */
+        .copy-button {
+            background: linear-gradient(45deg, #ff6b6b, #ffd700);
+            border: none;
+            color: #000;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .copy-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+        }
+        
+        .copy-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .copy-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+        }
+        
+        .copy-button:active {
+            transform: translateY(-1px);
+        }
+        
+        /* Notifica di successo */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        /* Animazioni */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .link-card {
+                padding: 1.5rem;
+                margin: 1rem 0;
+            }
+            
+            .film-strip {
+                width: 20px;
+            }
+            
+            .link-text {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particelle fluttuanti -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Film strips -->
+    <div class="film-strip"></div>
+    <div class="film-strip film-strip-right"></div>
+    
+    <div class="container">
+        <header class="cinema-header">
+            <h1 class="cinema-title">LISTA AUTOMATICA VEEZIE</h1>
+            <p class="subtitle">La tua fonte di intrattenimento cinematografico</p>
+        </header>
+        
+        <div class="link-card">
+            <p class="instruction-text">
+                Per la lista automatica di <strong>Veezie</strong> incollare questo link:
+            </p>
+            
+            <div class="link-box" onclick="openAndCopyLink()">
+                <div class="link-text" id="linkText">
+                    https://raw.githubusercontent.com/mrrearm/veezie/refs/heads/main/listaveezie.txt
+                </div>
+            </div>
+            
+            <button class="copy-button" onclick="copyLink()">
+                📋 Copia Link
+            </button>
+        </div>
+    </div>
+    
+    <!-- Notifica -->
+    <div class="notification" id="notification">
+        Link copiato negli appunti! ✨
+    </div>
+    
+    <script>
+        const linkUrl = 'https://raw.githubusercontent.com/mrrearm/veezie/refs/heads/main/listaveezie.txt';
+        
+        // Genera particelle fluttuanti
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Copia link negli appunti
+        async function copyLink() {
+            try {
+                await navigator.clipboard.writeText(linkUrl);
+                showNotification();
+            } catch (err) {
+                // Fallback per browser più vecchi
+                const textArea = document.createElement('textarea');
+                textArea.value = linkUrl;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification();
+            }
+        }
+        
+        // Apre il link e lo copia
+        function openAndCopyLink() {
+            // Apre il link in una nuova scheda
+            window.open(linkUrl, '_blank');
+            
+            // Copia il link
+            copyLink();
+        }
+        
+        // Mostra notifica di successo
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Inizializza le particelle quando la pagina si carica
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+        });
+        
+        // Effetto parallax per le particelle
+        document.addEventListener('mousemove', function(e) {
+            const particles = document.querySelectorAll('.particle');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            particles.forEach((particle, index) => {
+                const speed = (index % 5 + 1) * 0.5;
+                particle.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
